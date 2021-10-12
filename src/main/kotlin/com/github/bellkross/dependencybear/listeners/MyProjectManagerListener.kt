@@ -1,9 +1,9 @@
-package org.jetbrains.plugins.template.listeners
+package com.github.bellkross.dependencybear.listeners
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
-import org.jetbrains.plugins.template.services.MyProjectService
+import com.github.bellkross.dependencybear.services.MyProjectService
 
 internal class MyProjectManagerListener : ProjectManagerListener {
 
