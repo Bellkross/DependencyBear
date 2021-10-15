@@ -6,6 +6,7 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiComment
 import com.intellij.psi.impl.source.tree.PsiCommentImpl
 
 internal fun getDependenciesNames(project: Project): List<String> {
@@ -20,7 +21,7 @@ internal fun getDependenciesNames(module: Module): List<String> {
  * Finds occurrences of [keywords] in the comment component
  * @return List of [TextRange]s, where keywords occur
  */
-internal fun PsiCommentImpl.findRanges(keywords: List<String>): List<TextRange> {
+internal fun PsiComment.findRanges(keywords: List<String>): List<TextRange> {
     return text.findRanges(keywords).map { range ->
         TextRange(range.first, range.last + 1).shiftRight(textRange.startOffset)
     }

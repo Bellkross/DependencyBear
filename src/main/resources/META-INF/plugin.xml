@@ -5,10 +5,11 @@
     <vendor>bellkross</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends optional="true" config-file="dependencyBear-withKotlin.xml">org.jetbrains.kotlin</depends>
     <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <annotator language="JAVA" implementationClass="com.github.bellkross.dependencybear.annotators.JavaCommentDependencyAnnotator"/>
+        <annotator language="JAVA" implementationClass="com.github.bellkross.dependencybear.annotators.CommentDependencyAnnotator"/>
         <applicationService serviceImplementation="com.github.bellkross.dependencybear.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.bellkross.dependencybear.services.MyProjectService"/>
     </extensions>
