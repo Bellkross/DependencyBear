@@ -12,6 +12,21 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 
 /**
+ * Annotates modules of a project of [element].
+ * For each module occurrence provides a tooltip that this is a name of a module in the project.
+ */
+internal fun annotateModules(element: PsiElement, holder: AnnotationHolder) {
+    element.findRanges(getModulesNames(element.project)).forEach { moduleWordRange ->
+        val message = Tooltips.PROJECT_MODULE
+        holder.newAnnotation(HighlightSeverity.INFORMATION, message)
+            .range(moduleWordRange)
+            .textAttributes(DefaultLanguageHighlighterColors.METADATA)
+            .tooltip(message)
+            .create()
+    }
+}
+
+/**
  * Annotates dependencies of a project of [element].
  * For each dependency occurrence provides a description to which module it belongs in a tooltip.
  */

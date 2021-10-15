@@ -1,5 +1,6 @@
-package com.github.bellkross.dependencybear.annotators
+package com.github.bellkross.dependencybear.annotators.literals
 
+import com.github.bellkross.dependencybear.annotators.annotateDependencies
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.psi.PsiElement
