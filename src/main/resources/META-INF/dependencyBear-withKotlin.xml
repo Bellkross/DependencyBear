@@ -1,11 +1,11 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
         <annotator language="kotlin"
-                   implementationClass="com.github.bellkross.dependencybear.annotators.comments.CommentDependencyAnnotator"/>
+                   implementationClass="com.github.bellkross.dependencybear.annotators.comments.CommentDependenciesAnnotator"/>
         <annotator language="kotlin"
                    implementationClass="com.github.bellkross.dependencybear.annotators.comments.CommentModulesAnnotator"/>
         <annotator language="kotlin"
-                   implementationClass="com.github.bellkross.dependencybear.annotators.literals.KotlinLiteralsDependencyAnnotator"/>
+                   implementationClass="com.github.bellkross.dependencybear.annotators.literals.KotlinLiteralsDependenciesAnnotator"/>
         <annotator language="kotlin"
                    implementationClass="com.github.bellkross.dependencybear.annotators.literals.KotlinLiteralsModulesAnnotator"/>
     </extensions>

@@ -12,7 +12,7 @@ import com.intellij.psi.PsiElement
  * Highlights any occurrence of the names of the dependencies of the current module,
  * if they occur in a comment.
  */
-class CommentDependencyAnnotator : Annotator {
+class CommentDependenciesAnnotator : Annotator {
 
     override fun annotate(commentElement: PsiElement, holder: AnnotationHolder) {
         if (commentElement !is PsiComment) {

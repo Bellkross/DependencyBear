@@ -6,6 +6,10 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiLiteral
 
+/**
+ * Highlights any occurrence of the modules of the project,
+ * if they occur in a [String] literal.
+ */
 class JavaLiteralsModulesAnnotator: Annotator {
 
     override fun annotate(commentElement: PsiElement, holder: AnnotationHolder) {

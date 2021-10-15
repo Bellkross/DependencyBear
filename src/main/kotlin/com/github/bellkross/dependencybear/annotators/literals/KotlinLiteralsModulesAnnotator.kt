@@ -7,6 +7,10 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import org.jetbrains.kotlin.lexer.KtTokens
 
+/**
+ * Highlights any occurrence of the modules of the project,
+ * if they occur in a [String] literal.
+ */
 class KotlinLiteralsModulesAnnotator: Annotator {
 
     override fun annotate(commentElement: PsiElement, holder: AnnotationHolder) {
