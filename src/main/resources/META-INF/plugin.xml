@@ -5,8 +5,10 @@
     <vendor>bellkross</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <annotator language="JAVA" implementationClass="com.github.bellkross.dependencybear.annotators.JavaDependencyAnnotator"/>
         <applicationService serviceImplementation="com.github.bellkross.dependencybear.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.bellkross.dependencybear.services.MyProjectService"/>
     </extensions>
