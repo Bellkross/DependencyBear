@@ -6,29 +6,23 @@ import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
-import com.intellij.openapi.module.ModuleManager
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.PsiCommentImpl
 
 
 class JavaCommentDependencyAnnotator : Annotator {
 
-    override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        if (element !is PsiCommentImpl) {
+    override fun annotate(commentElement: PsiElement, holder: AnnotationHolder) {
+        if (commentElement !is PsiCommentImpl) {
             return
         }
-        val comment: PsiCommentImpl = element
-        val modulesNames = ModuleManager.getInstance(comment.project).modules.map { it.name }
-        if (!modulesNames.any { comment.text.contains(it) }) {
+        val moduleDependenciesNames = getDependenciesNames(commentElement.project)
+        if (!moduleDependenciesNames.any { commentElement.text.contains(it) }) {
             return
         }
-        val modulesTextRanges = findRanges(comment.text, modulesNames).map { range ->
-            TextRange(range.first, range.last + 1).shiftRight(comment.textRange.startOffset)
-        }
-        modulesTextRanges.forEach { simpleWordRange ->
+        commentElement.findRanges(moduleDependenciesNames).forEach { dependencyWordRange ->
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                .range(simpleWordRange)
+                .range(dependencyWordRange)
                 .textAttributes(DefaultLanguageHighlighterColors.KEYWORD).create()
         }
     }

@@ -1,17 +1,49 @@
 package com.github.bellkross.dependencybear.annotators
 
-fun findRanges(text: String, keywords: List<String>): List<IntRange> {
-    return keywords.map { keyword -> findRanges(text, keyword) }.flatten()
+import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleManager
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.impl.source.tree.PsiCommentImpl
+
+internal fun getDependenciesNames(project: Project): List<String> {
+    return ModuleManager.getInstance(project).modules.map(::getDependenciesNames).flatten()
 }
 
-fun findRanges(text: String, keyword: String): List<IntRange> {
+internal fun getDependenciesNames(module: Module): List<String> {
+    return ModuleRootManager.getInstance(module).orderEntries().classes().roots.map(VirtualFile::getName)
+}
+
+/**
+ * Finds occurrences of [keywords] in the comment component
+ * @return List of [TextRange]s, where keywords occur
+ */
+internal fun PsiCommentImpl.findRanges(keywords: List<String>): List<TextRange> {
+    return text.findRanges(keywords).map { range ->
+        TextRange(range.first, range.last + 1).shiftRight(textRange.startOffset)
+    }
+}
+
+/**
+ * Finds occurrences of [keywords] in the string
+ * @return List of ranges, where keywords occur
+ */
+internal fun String.findRanges(keywords: List<String>): List<IntRange> {
+    return keywords.map(::findRanges).flatten()
+}
+
+/**
+ * Finds occurrences of [keyword] in the string
+ * @return List of ranges, where keyword occur. [IntRange.start] and [IntRange.last] are inclusive
+ */
+internal fun String.findRanges(keyword: String): List<IntRange> {
     val ranges: MutableList<IntRange> = mutableListOf()
-    var from: Int = text.indexOf(keyword, 0, true)
+    var from: Int = this.indexOf(keyword, 0, true)
     while (from != -1) {
-        ranges.add(
-            from until from + keyword.length
-        )
-        from = text.indexOf(keyword, from + keyword.length, true)
+        ranges.add(from until from + keyword.length)
+        from = this.indexOf(keyword, from + keyword.length, true)
     }
     return ranges
 }
