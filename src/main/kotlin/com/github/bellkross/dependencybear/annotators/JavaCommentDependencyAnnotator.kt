@@ -12,38 +12,25 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.PsiCommentImpl
 
 
-class JavaDependencyAnnotator : Annotator {
+class JavaCommentDependencyAnnotator : Annotator {
 
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         if (element !is PsiCommentImpl) {
             return
         }
-        val modulesNames = ModuleManager.getInstance(element.project).modules.map { it.name }
         val comment: PsiCommentImpl = element
+        val modulesNames = ModuleManager.getInstance(comment.project).modules.map { it.name }
         if (!modulesNames.any { comment.text.contains(it) }) {
             return
         }
-        val modulesTextRanges = modulesNames.map { moduleName -> findRanges(comment.text, moduleName) }
-            .flatten().map { range ->
-                TextRange(range.first, range.last + 1).shiftRight(comment.textRange.startOffset)
-            }
+        val modulesTextRanges = findRanges(comment.text, modulesNames).map { range ->
+            TextRange(range.first, range.last + 1).shiftRight(comment.textRange.startOffset)
+        }
         modulesTextRanges.forEach { simpleWordRange ->
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
                 .range(simpleWordRange)
                 .textAttributes(DefaultLanguageHighlighterColors.KEYWORD).create()
         }
-    }
-
-    private fun findRanges(text: String, keyword: String): List<IntRange> {
-        val ranges: MutableList<IntRange> = mutableListOf()
-        var from: Int = text.indexOf(keyword, 0, true)
-        while (from != -1) {
-            ranges.add(
-                from until from + keyword.length
-            )
-            from = text.indexOf(keyword, from + keyword.length, true)
-        }
-        return ranges
     }
 
 }
