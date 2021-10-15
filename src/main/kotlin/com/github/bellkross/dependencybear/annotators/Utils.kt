@@ -1,16 +1,32 @@
 package com.github.bellkross.dependencybear.annotators
 
+import com.intellij.lang.annotation.AnnotationHolder
+import com.intellij.lang.annotation.HighlightSeverity
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.PsiComment
-import com.intellij.psi.impl.source.tree.PsiCommentImpl
-import com.intellij.util.containers.stream
-import java.util.function.Function
-import java.util.stream.Collectors
+import com.intellij.psi.PsiElement
+
+/**
+ * Annotates dependencies of a project of [element].
+ * For each dependency occurrence provides a description to which module it belongs in a tooltip.
+ */
+internal fun annotateDependencies(element: PsiElement, holder: AnnotationHolder) {
+    getModuleNameToDependenciesNames(element.project).forEach { (moduleName, dependencyNames) ->
+        element.findRanges(dependencyNames).forEach { dependencyWordRange ->
+            val message = String.format(Tooltips.DEPENDENCY, moduleName)
+            holder.newAnnotation(HighlightSeverity.INFORMATION, message)
+                .range(dependencyWordRange)
+                .textAttributes(DefaultLanguageHighlighterColors.METADATA)
+                .tooltip(message)
+                .create()
+        }
+    }
+}
 
 internal fun getModulesNames(project: Project): List<String> {
     return ModuleManager.getInstance(project).modules.map { it.name }
@@ -34,7 +50,7 @@ internal fun getDependenciesNames(module: Module): List<String> {
  * Finds occurrences of [keywords] in the comment component
  * @return List of [TextRange]s, where keywords occur
  */
-internal fun PsiComment.findRanges(keywords: List<String>): List<TextRange> {
+internal fun PsiElement.findRanges(keywords: List<String>): List<TextRange> {
     return text.findRanges(keywords).map { range ->
         TextRange(range.first, range.last + 1).shiftRight(textRange.startOffset)
     }

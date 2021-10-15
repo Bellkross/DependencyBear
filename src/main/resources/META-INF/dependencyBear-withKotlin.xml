@@ -4,5 +4,7 @@
                    implementationClass="com.github.bellkross.dependencybear.annotators.CommentDependencyAnnotator"/>
         <annotator language="kotlin"
                    implementationClass="com.github.bellkross.dependencybear.annotators.CommentModulesAnnotator"/>
+        <annotator language="kotlin"
+                   implementationClass="com.github.bellkross.dependencybear.annotators.KotlinLiteralsDependencyAnnotator"/>
     </extensions>
 </idea-plugin>

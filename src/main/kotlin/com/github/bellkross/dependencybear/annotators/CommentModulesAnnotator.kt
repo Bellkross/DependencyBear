@@ -18,10 +18,12 @@ class CommentModulesAnnotator: Annotator {
             return
         }
         commentElement.findRanges(getModulesNames(commentElement.project)).forEach { moduleWordRange ->
-            holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+            val message = Tooltips.PROJECT_MODULE
+            holder.newAnnotation(HighlightSeverity.INFORMATION, message)
                 .range(moduleWordRange)
-                .tooltip(Tooltips.PROJECT_MODULE)
-                .textAttributes(DefaultLanguageHighlighterColors.KEYWORD).create()
+                .textAttributes(DefaultLanguageHighlighterColors.METADATA)
+                .tooltip(message)
+                .create()
         }
     }
 

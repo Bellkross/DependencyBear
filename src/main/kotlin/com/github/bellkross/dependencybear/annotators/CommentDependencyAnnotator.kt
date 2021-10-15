@@ -4,8 +4,6 @@ package com.github.bellkross.dependencybear.annotators
 
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
-import com.intellij.lang.annotation.HighlightSeverity
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 
@@ -19,15 +17,7 @@ class CommentDependencyAnnotator : Annotator {
         if (commentElement !is PsiComment) {
             return
         }
-        val moduleNameToDependenciesNames = getModuleNameToDependenciesNames(commentElement.project)
-        moduleNameToDependenciesNames.forEach { (moduleName, dependencyNames) ->
-            commentElement.findRanges(dependencyNames).forEach { dependencyWordRange ->
-                holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                    .range(dependencyWordRange)
-                    .tooltip(String.format(Tooltips.DEPENDENCY, moduleName))
-                    .textAttributes(DefaultLanguageHighlighterColors.KEYWORD).create()
-            }
-        }
+        annotateDependencies(commentElement, holder)
     }
 
 }

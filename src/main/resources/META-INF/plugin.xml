@@ -11,6 +11,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <annotator language="JAVA" implementationClass="com.github.bellkross.dependencybear.annotators.CommentDependencyAnnotator"/>
         <annotator language="JAVA" implementationClass="com.github.bellkross.dependencybear.annotators.CommentModulesAnnotator"/>
+        <annotator language="JAVA" implementationClass="com.github.bellkross.dependencybear.annotators.JavaLiteralsDependencyAnnotator"/>
         <applicationService serviceImplementation="com.github.bellkross.dependencybear.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.bellkross.dependencybear.services.MyProjectService"/>
     </extensions>
