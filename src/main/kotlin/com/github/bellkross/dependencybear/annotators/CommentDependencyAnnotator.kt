@@ -8,24 +8,25 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
-import com.intellij.psi.impl.source.javadoc.PsiDocCommentImpl
-import com.intellij.psi.impl.source.tree.PsiCommentImpl
 
-
+/**
+ * Highlights any occurrence of the names of the dependencies of the current module,
+ * if they occur in a comment.
+ */
 class CommentDependencyAnnotator : Annotator {
 
     override fun annotate(commentElement: PsiElement, holder: AnnotationHolder) {
         if (commentElement !is PsiComment) {
             return
         }
-        val moduleDependenciesNames = getDependenciesNames(commentElement.project)
-        if (!moduleDependenciesNames.any { commentElement.text.contains(it) }) {
-            return
-        }
-        commentElement.findRanges(moduleDependenciesNames).forEach { dependencyWordRange ->
-            holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                .range(dependencyWordRange)
-                .textAttributes(DefaultLanguageHighlighterColors.KEYWORD).create()
+        val moduleNameToDependenciesNames = getModuleNameToDependenciesNames(commentElement.project)
+        moduleNameToDependenciesNames.forEach { (moduleName, dependencyNames) ->
+            commentElement.findRanges(dependencyNames).forEach { dependencyWordRange ->
+                holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                    .range(dependencyWordRange)
+                    .tooltip(String.format(Tooltips.DEPENDENCY, moduleName))
+                    .textAttributes(DefaultLanguageHighlighterColors.KEYWORD).create()
+            }
         }
     }
 

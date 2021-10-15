@@ -8,10 +8,23 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiComment
 import com.intellij.psi.impl.source.tree.PsiCommentImpl
+import com.intellij.util.containers.stream
+import java.util.function.Function
+import java.util.stream.Collectors
 
-internal fun getDependenciesNames(project: Project): List<String> {
-    return ModuleManager.getInstance(project).modules.map(::getDependenciesNames).flatten()
+internal fun getModulesNames(project: Project): List<String> {
+    return ModuleManager.getInstance(project).modules.map { it.name }
 }
+
+/**
+ * Finds names of dependencies for each module
+ * @return [Map] with key as module name and value as a list of module's dependencies name
+ */
+internal fun getModuleNameToDependenciesNames(project: Project) : Map<String, List<String>> =
+    ModuleManager.getInstance(project).modules.associateBy(
+        Module::getName,
+        ::getDependenciesNames
+    )
 
 internal fun getDependenciesNames(module: Module): List<String> {
     return ModuleRootManager.getInstance(module).orderEntries().classes().roots.map(VirtualFile::getName)
